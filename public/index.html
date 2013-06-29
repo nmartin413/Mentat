@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Mentat</title>
+
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.css" />
+	<link rel="stylesheet" href="css/custom.css" />
+
+	<script src="http://nmartin.adage.adagetechnologies.com:3033/socket.io/socket.io.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/headjs/0.99/head.min.js"></script>
+
+</head>
+<body>
+	<div class="wrap">
+		<header class="clearfix">
+			<div class="pull-left">
+				<span class="app-title">Mentat</span>
+			</div>
+			<div class="pull-right">
+				<div id="connectionView"></div>
+			</div>
+		</header>
+		<section>
+			<h4>the hive mind</h4>
+			<div class="progress-wrap">
+				<div id="mentalOverview" class="progress"></div>
+			</div>
+		</section>
+		<section id="stateSelection">
+			<h4>Your current mental state:</h4>
+			<div class="clearfix">
+				<div class="state-button">
+					<span data-type="stateButton" data-value="2" class="btn btn-large btn-success">Understanding</span>
+				</div>
+				<div class="state-button">
+					<span data-type="stateButton" data-value="1" class="btn btn-large btn-warning">Confused</span>
+				</div>
+				<div class="state-button">
+					<span data-type="stateButton" data-value="0" class="btn btn-large btn-danger">Lost</span>
+				</div>
+			</div>
+		</section>
+	</div>
+	
+	<!-- Async JavaScript -->
+	<script src="js/run.js"></script>
+
+	<!-- Async CSS -->
+	<link href='http://fonts.googleapis.com/css?family=Ubuntu:400,500' rel='stylesheet' type='text/css'>
+
+</body>
+</html>
