@@ -1,0 +1,13 @@
+{
+	"name": "Mentat",
+	"version": "0.0.1",
+	"description": "Comprehension polling",
+	"scripts": {
+		"start": "./server"
+	},
+	"dependencies": {
+		"express": "*",
+		"socket.io": "*",
+		"underscore": "*"
+	}
+}
