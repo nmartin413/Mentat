@@ -7,7 +7,7 @@ mentat.forge.createContext = function () {
 
 	var history = [{
 		connections: 0,
-		mentalState: 0
+		mentalState: 'default'
 	}];
 
 	/*----------------------------------*/

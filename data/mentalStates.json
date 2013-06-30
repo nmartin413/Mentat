@@ -1,0 +1,22 @@
+[
+	{
+		"name": "good",
+		"label": "Good",
+		"buttonClass": "btn-success"
+	},
+	{
+		"name": "confused",
+		"label": "Confused",
+		"buttonClass": "btn-warning"
+	},
+	{
+		"name": "lost",
+		"label": "Lost",
+		"buttonClass": "btn-danger"
+	},
+	{
+		"name": "default",
+		"label": "None",
+		"buttonClass": ""
+	}
+]

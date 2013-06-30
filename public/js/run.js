@@ -6,7 +6,8 @@
 		mentat.init({
 			connectionViewElement: document.querySelector('#connectionView'),
 			stateSelectionElement: document.querySelector('#stateSelection'),
-			overviewElement: document.querySelector('#mentalOverview')
+			overviewElement: document.querySelector('#mentalOverview'),
+			statusElement: document.querySelector('#statusView')
 		});
 		mentat.start();
 	}
@@ -18,10 +19,12 @@
 		"//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.0.0/backbone-min.js",
 		"js/app.js",
 		"js/context.js",
+		"js/mentalState.js",
 		"js/connectionView.js",
 		"js/stateSelection.js",
 		"js/mentalOverview.js",
 		"js/mentalSubview.js",
+		"js/statusView.js",
 		init
 	];
 

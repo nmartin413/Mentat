@@ -1,3 +1,6 @@
+// Main server-side file
+// ----------------------
+
 var express = require('express');
 var http = require('http');
 var _ = require('underscore');
@@ -13,24 +16,28 @@ app.io = require('socket.io').listen(server);
 
 var logPrefix = "   BrainTank - ";
 
-var BTLink = require('./link.js');
+var appData = require('./data/data.js');
+var BTLink = require('./model/link.js');
+
 var links = [];
 
-app.io.on('connection', function (socket) {
+app.io.on('connection', bindNewConnection);
+
+function bindNewConnection(socket) {
 	var newLink = BTLink.create(socket);
 	links.push(newLink);
 
-	socket.emit('init', 'success');
+	socket.emit('init', appData.initData);
 	broadcastContextUpdate();
 
 	socket.on('didUpdateState', _.partial(didUpdateState, socket));
 
 	socket.on('disconnect', _.partial(didDisconnect, socket));
-
-});
+}
 
 function didUpdateState(socket, state) {
 	if (!socket) throw 'socket was null';
+
 	console.log(logPrefix + 'updating state... \n\t new state: ' + JSON.stringify(state));
 	
 	updateStateForSocket(state, socket);
@@ -39,6 +46,7 @@ function didUpdateState(socket, state) {
 
 function didDisconnect(socket) {
 	if (!socket) throw 'socket was null';
+
 	console.log(logPrefix + 'closing socket...');
 
 	var link = getLinkForSocket(socket);
@@ -64,24 +72,18 @@ function broadcastContextUpdate() {
 	_(links).each(function (link) {
 		link.socket.emit('didUpdateContext', currentContext);
 	});
-
 }
 
 function getMentalStateCounts() {
-	var groupedLinks = _(links).groupBy(function (link) {
-		return link.state.mentalState;
+	var stateCountMap = appData.createMentalStateCountMap();
+
+	links.forEach(function (link) {
+		var msName = link.state.mentalState || 'unknown';
+		var previousCount = stateCountMap[msName] || 0;
+		stateCountMap[msName] = previousCount + 1;
 	});
 
-	var counts = {};
-	_(groupedLinks).each(function (linkGroup, index) {
-		counts[index] = linkGroup.length;
-	});
-
-	return _(counts).defaults({
-		"0": 0,
-		"1": 0,
-		"2": 0
-	});
+	return stateCountMap;
 }
 
 function getContext() {

@@ -3,24 +3,21 @@
 var mentat = {
 	
 	forge: {},
-
-	mentalStateNames: {
-		"0": "Following",
-		"1": "Confused",
-		"2": "Lost"
-	}
+	model: {}
 
 };
 
 
-(function (forge) {
+(function (ns) {
 
 	var socket;
 	var context;
+	var mentalStates;
 
 	var connectionView;
 	var stateSelection;
 	var mentalOverview;
+	var statusView;
 
 	/*----------------------------------*/
 
@@ -28,10 +25,19 @@ var mentat = {
 		get: function () { return context; }
 	});
 
+	Object.defineProperty(mentat, 'mentalStates', {
+		get: function () { return mentalStates; }
+	});
+
 	/*----------------------------------*/
 
-	function didInitSocket() {
-		console.log('Socket Initialized');
+	function didInitSocket(initData) {
+		console.log('Server sent init data... %o', initData);
+		mentalStates.add(initData.mentalStates);
+		
+		stateSelection.refresh();
+
+		statusView.statusText = "Connected";
 	}
 
 	function didUpdateContext(newContext) {
@@ -66,25 +72,33 @@ var mentat = {
 	/*----------------------------------*/
 
 	mentat.init = function (opts) {
-		context = forge.createContext();
+		context = ns.forge.createContext();
+		mentalStates = ns.model.createMentalStateCollection();
 
-		connectionView = forge.createConnectionView();
+		statusView = ns.forge.createStatusView();
+		statusView.bind(opts.statusElement);
+
+		connectionView = ns.forge.createConnectionView();
 		connectionView.bind(opts.connectionViewElement);
 
-		stateSelection = forge.createStateSelection();
+		stateSelection = ns.forge.createStateSelection();
+		stateSelection.mentalStates = mentalStates;
 		stateSelection.bind(opts.stateSelectionElement);
 		stateSelection.on('didChangeMentalState', didChangeMentalState);
 
-		mentalOverview = forge.createMentalOverview();
+		mentalOverview = ns.forge.createMentalOverview();
 		mentalOverview.bind(opts.overviewElement);
 
+		statusView.statusText = "Initialized";
 	}
 
 	mentat.start = function () {
 		socket = io.connect(location.origin);
 		socket.on('init', didInitSocket);
 		socket.on('didUpdateContext', _(didUpdateContext).debounce(500));
+
+		statusView.statusText = "Waiting for connection...";
 	}
 
 
-}(mentat.forge));
+}(mentat));
